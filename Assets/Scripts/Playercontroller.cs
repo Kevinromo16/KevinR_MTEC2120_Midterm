@@ -16,6 +16,8 @@ public class Playercontroller : MonoBehaviour
     public Transform groundCheck;
     public float checkRadius;
     public LayerMask whatIsGround;
+    private SpriteRenderer sr;
+    private Animator anim;
 
 
     private int extraJump;
@@ -26,6 +28,8 @@ public class Playercontroller : MonoBehaviour
     {
         extraJump = extraJumpsValue;
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
 
     }
 
@@ -41,21 +45,24 @@ public class Playercontroller : MonoBehaviour
 
         transform.Translate(xMOve * speed * Time.deltaTime, 0, 0);
 
-        if (facingRight == false && moveInput > 0){
-            Flip();   
-        } else if(facingRight == true && moveInput < 0)
+        if (xMOve != 0)
         {
-            Flip();
+            anim.SetBool("Moving", true);
+            if (xMOve < 0)
+            {
+                sr.flipX = true;
+            } else if (xMOve > 0)
+            {
+                sr.flipX = false;
+            }
+        }
+        else
+        {
+            anim.SetBool("Moving", false);
+
         }
 
-        void Flip()
-        {
-            facingRight = !facingRight;
-            Vector3 Scaler = transform.localScale;
-            Scaler.x *= -1;
-            transform.localScale = Scaler;
 
-        }
     }
 
     void Update()
