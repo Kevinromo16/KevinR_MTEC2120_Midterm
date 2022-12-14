@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Playercontroller : MonoBehaviour
 {
+    public AudioClip strike;
+    public AudioClip fireball;
     public GameManager gm;
     public float speed;
     public float jumpspeed = 1;
-    private Rigidbody2D rb; 
+    private Rigidbody2D rb;
     private float moveInput;
     private bool facingRight = true;
 
@@ -67,7 +69,7 @@ public class Playercontroller : MonoBehaviour
 
     void Update()
     {
-        if(isGrounded == true)
+        if (isGrounded == true)
         {
             extraJump = extraJumpsValue;
         }
@@ -78,22 +80,33 @@ public class Playercontroller : MonoBehaviour
             rb.velocity = Vector2.up * jumpspeed;
             extraJump--;
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJump == 0 && isGrounded == true) 
+        else if (Input.GetKeyDown(KeyCode.UpArrow) && extraJump == 0 && isGrounded == true)
         {
             rb.velocity = Vector2.up * jumpspeed;
 
         }
+
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Item")
         {
+            gm.PlaySound(strike);
             Destroy(collision.gameObject);
+            Destroy(gameObject);
         }
 
         if (collision.gameObject.tag == "Score")
         {
-            Destroy(collision.gameObject); 
+            gm.IncrementScore(1);
+            Destroy(collision.gameObject);
+            gm.PlaySound(fireball);
+        }
+
+        if (collision.gameObject.tag == "Ground")
+        {
+            Destroy(gameObject);
         }
 
     }
